@@ -91,13 +91,20 @@ export default function AttentionGraph({ active }: { active: boolean }) {
   }, [active]);
 
   return (
-    <div className="w-full relative min-h-[200px]">
+    <div 
+      className="w-full relative min-h-[200px]" 
+      role="figure" 
+      aria-label="Semantic Attention Graph"
+    >
        {!active ? (
          <div className="absolute inset-0 flex items-center justify-center border border-dashed border-white/10 rounded-xl">
            <span className="text-xs text-muted-foreground uppercase tracking-widest font-mono">Awaiting Data</span>
          </div>
        ) : (
-         <div ref={containerRef} className="absolute inset-0 bg-background/50 rounded-xl border border-white/5" />
+         <>
+           <div className="sr-only">A directed graph showing relationships between Intent, Tone, Constraints, and Conflict.</div>
+           <div ref={containerRef} className="absolute inset-0 bg-background/50 rounded-xl border border-white/5" aria-hidden="true" />
+         </>
        )}
     </div>
   );

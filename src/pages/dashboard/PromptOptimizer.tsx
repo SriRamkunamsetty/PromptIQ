@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Sparkles, Loader2, Copy, Check, Activity, ShieldAlert } from 'lucide-react';
-import { ai } from '@/lib/gemini';
 import { toast } from 'sonner';
 import { auth, db, handleFirestoreError, OperationType } from '@/lib/firebase';
 import { collection as firestoreCollection, addDoc as firestoreAddDoc, serverTimestamp as firestoreServerTimestamp } from 'firebase/firestore';
@@ -36,33 +35,28 @@ export default function PromptOptimizer() {
 
   const handleOptimize = async () => {
     if (!input.trim()) return;
-    if (!ai) {
-      toast.error('Gemini API key is missing. Please configure it in the settings.');
-      return;
-    }
 
     setIsOptimizing(true);
     setSimilarityScore(null);
     try {
-      const response = await ai.models.generateContent({
-        model: settings.ai.defaultModel,
-        contents: `You are an expert Prompt Engineer and LLM Token Optimizer. 
-        Analyze the following prompt and rewrite it to be:
-        1. Highly token efficient (remove redundant words, pleasantries, and fluff).
-        2. Extremely clear and unambiguous.
-        3. Better structured for an LLM to understand.
-        4. Optimization aggressiveness: ${settings.ai.optimizationAggressiveness}/100.
-        
-        Return ONLY the optimized prompt text, nothing else.
-        
-        Original Prompt:
-        ${input}`,
-        config: {
-          temperature: 0.2, // Low temperature for consistent optimization
-        }
+      const response = await fetch('/api/optimize', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          input,
+          model: settings.ai.defaultModel,
+          optimizationAggressiveness: settings.ai.optimizationAggressiveness,
+        }),
       });
 
-      const resultText = response.text?.trim() || '';
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        throw new Error(errorData?.error || `HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const resultText = data.output;
+      
       setOutput(resultText);
       const finalOutputTokens = await countTokensAsync(resultText);
       setOutputTokens(finalOutputTokens);

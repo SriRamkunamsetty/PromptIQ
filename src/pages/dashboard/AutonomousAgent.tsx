@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Bot, Sparkles, Wand2, Loader2, ArrowRight, CheckCircle2, BrainCircuit } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { ai } from '@/lib/gemini';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -12,16 +11,18 @@ export default function AutonomousAgent() {
   const [result, setResult] = useState<{ optimized: string, reasoning: string, savings: string } | null>(null);
 
   const runAgent = async () => {
-    if (!ai) return toast.error('Gemini API not configured');
     if (!prompt.trim()) return toast.error('Enter a prompt to optimize');
 
     setIsRunning(true);
     setResult(null);
 
     try {
-      const response = await ai.models.generateContent({
-        model: "gemini-3.1-pro-preview",
-        contents: `You are an elite Autonomous Prompt Optimization Agent.
+      const response = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: "gemini-3.1-pro-preview",
+          prompt: `You are an elite Autonomous Prompt Optimization Agent.
         Rewrite the following prompt to be as dense and token-efficient as possible without losing structural intent.
         Return ONLY a JSON object:
         - optimized: "the compressed string"
@@ -29,10 +30,17 @@ export default function AutonomousAgent() {
         - savings: "estimated token reduction %"
         
         Original: "${prompt}"`,
-        config: { temperature: 0.2 }
+          config: { temperature: 0.2 }
+        })
       });
       
-      let rawText = response.text?.trim() || "{}";
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        throw new Error(errorData?.error || `HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      let rawText = data.output || "{}";
       if (rawText.startsWith('\`\`\`json')) {
         rawText = rawText.replace(/\`\`\`json/g, '').replace(/\`\`\`/g, '').trim();
       }
