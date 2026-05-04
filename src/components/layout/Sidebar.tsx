@@ -1,3 +1,4 @@
+import React, { HTMLAttributes } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, 
@@ -28,7 +29,9 @@ import { Button } from '@/components/ui/button';
 import { auth } from '@/lib/firebase';
 import { signOut } from 'firebase/auth';
 
-interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
+interface SidebarProps {
+  className?: string;
+}
 
 export function Sidebar({ className }: SidebarProps) {
   const location = useLocation();
@@ -90,10 +93,12 @@ export function Sidebar({ className }: SidebarProps) {
         </div>
       </div>
       <div className="px-3 py-2 flex flex-col gap-1">
-        <Button variant="ghost" className="w-full justify-start gap-3 hover:bg-card/50">
-          <Settings className="h-4 w-4" />
-          Settings
-        </Button>
+        <Link to="/dashboard/settings">
+          <Button variant={location.pathname.startsWith('/dashboard/settings') ? "secondary" : "ghost"} className={cn("w-full justify-start gap-3", location.pathname.startsWith('/dashboard/settings') ? "bg-primary/20 hover:bg-primary/30 text-primary border border-primary/20" : "hover:bg-card/50 text-muted-foreground hover:text-foreground")}>
+            <Settings className="h-4 w-4" />
+            Settings
+          </Button>
+        </Link>
         <Button variant="ghost" className="w-full justify-start gap-3 hover:bg-destructive/10 hover:text-destructive text-muted-foreground" onClick={handleSignOut}>
           <LogOut className="h-4 w-4" />
           Sign Out

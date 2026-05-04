@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
-import { db, auth } from '@/lib/firebase';
+import { db, auth, handleFirestoreError, OperationType } from '@/lib/firebase';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 interface Stat {
@@ -32,6 +32,8 @@ export default function MainDashboard() {
       });
       setStats(records);
       setTotalSaved(savedAcc);
+    }, (error) => {
+      handleFirestoreError(error, OperationType.GET, 'users/{userId}/optimizations');
     });
 
     return () => unsubscribe();

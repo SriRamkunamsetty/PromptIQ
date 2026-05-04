@@ -1,10 +1,10 @@
 {
-  "projectId": "plasma-streamer-469211-n5",
-  "appId": "1:1076783333102:web:7a2fcb2e1a9be56a7fbdff",
-  "apiKey": "AIzaSyCz7tFAqMomWrCGIkI2Pm_M-roy2hF_zB4",
-  "authDomain": "plasma-streamer-469211-n5.firebaseapp.com",
+  "projectId": "qiscet-smart-connect",
+  "appId": "1:324238592465:web:c3020ef2a2b45f9a4e78f0",
+  "apiKey": "AIzaSyCDCTeevYJpjx8r7XxGzMbC2MCFpvo2y34",
+  "authDomain": "qiscet-smart-connect.firebaseapp.com",
   "firestoreDatabaseId": "ai-studio-7bb9d042-892e-4597-92c7-0aff33cfd005",
-  "storageBucket": "plasma-streamer-469211-n5.firebasestorage.app",
-  "messagingSenderId": "1076783333102",
+  "storageBucket": "qiscet-smart-connect.firebasestorage.app",
+  "messagingSenderId": "324238592465",
   "measurementId": ""
 }

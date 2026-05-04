@@ -25,5 +25,9 @@ service cloud.firestore {
       
       allow list: if isSignedIn() && request.auth.uid == userId && isValidId(userId);
     }
+    match /users/{userId}/settings/{settingId} {
+      allow read: if isSignedIn() && request.auth.uid == userId && isValidId(userId);
+      allow create, update: if isSignedIn() && request.auth.uid == userId && isValidId(userId) && isValidId(settingId);
+    }
   }
 }

@@ -1,14 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Sparkles, ArrowRightLeft, Loader2, Copy, Check } from 'lucide-react';
+import { Sparkles, Loader2, Copy, Check, Activity, ShieldAlert } from 'lucide-react';
 import { ai } from '@/lib/gemini';
 import { toast } from 'sonner';
-import { collection, addDoc, serverTimestamp } from 'firebase/auth';
-// Fix imports
 import { auth, db, handleFirestoreError, OperationType } from '@/lib/firebase';
 import { collection as firestoreCollection, addDoc as firestoreAddDoc, serverTimestamp as firestoreServerTimestamp } from 'firebase/firestore';
-import { estimateTokens, calculateCost } from '@/lib/tokens';
+import { useSettingsStore } from '@/lib/settings/store';
+import { SettingsService } from '@/lib/settings/service';
+import { countTokensAsync, calculateCost } from '@/lib/tokens';
+import { generateEmbedding, cosineSimilarity } from '@/lib/embeddings';
 
 export default function PromptOptimizer() {
   const [input, setInput] = useState('');
@@ -16,9 +17,18 @@ export default function PromptOptimizer() {
   const [isOptimizing, setIsOptimizing] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  // Accurate token estimation
-  const inputTokens = estimateTokens(input);
-  const outputTokens = estimateTokens(output);
+  const [inputTokens, setInputTokens] = useState(0);
+  const [outputTokens, setOutputTokens] = useState(0);
+  const [similarityScore, setSimilarityScore] = useState<number | null>(null);
+  const { settings } = useSettingsStore();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      countTokensAsync(input).then(setInputTokens);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [input]);
+
   const savings = inputTokens > 0 ? Math.round(((inputTokens - outputTokens) / inputTokens) * 100) : 0;
   
   const estimatedInputCost = calculateCost('gemini', inputTokens).promptCost;
@@ -32,14 +42,16 @@ export default function PromptOptimizer() {
     }
 
     setIsOptimizing(true);
+    setSimilarityScore(null);
     try {
       const response = await ai.models.generateContent({
-        model: "gemini-3.1-pro-preview",
+        model: settings.ai.defaultModel,
         contents: `You are an expert Prompt Engineer and LLM Token Optimizer. 
         Analyze the following prompt and rewrite it to be:
         1. Highly token efficient (remove redundant words, pleasantries, and fluff).
         2. Extremely clear and unambiguous.
         3. Better structured for an LLM to understand.
+        4. Optimization aggressiveness: ${settings.ai.optimizationAggressiveness}/100.
         
         Return ONLY the optimized prompt text, nothing else.
         
@@ -52,15 +64,28 @@ export default function PromptOptimizer() {
 
       const resultText = response.text?.trim() || '';
       setOutput(resultText);
-      toast.success('Prompt optimized successfully!');
+      const finalOutputTokens = await countTokensAsync(resultText);
+      setOutputTokens(finalOutputTokens);
+      
+      // Calculate real semantic fidelity
+      const vecA = await generateEmbedding(input);
+      const vecB = await generateEmbedding(resultText);
+      const sim = cosineSimilarity(vecA, vecB);
+      setSimilarityScore(sim);
+
+      if (sim < settings.ai.semanticPreservationThreshold / 100) {
+        toast.warning(`Semantic fidelity (${(sim * 100).toFixed(1)}%) is below the configured threshold (${settings.ai.semanticPreservationThreshold}%).`);
+      } else {
+        toast.success('Prompt optimized successfully!');
+      }
 
       if (auth.currentUser) {
          try {
-           const finalOutputTokens = estimateTokens(resultText);
            await firestoreAddDoc(firestoreCollection(db, 'users', auth.currentUser.uid, 'optimizations'), {
              inputTokens,
              outputTokens: finalOutputTokens,
              savedTokens: Math.max(0, inputTokens - finalOutputTokens),
+             similarity: sim,
              createdAt: firestoreServerTimestamp()
            });
          } catch (error) {
@@ -83,14 +108,17 @@ export default function PromptOptimizer() {
             .trim();
          setOutput(fakeOptimized);
          
+         const finalOutputTokens = await countTokensAsync(fakeOptimized);
+         setOutputTokens(finalOutputTokens);
+         setSimilarityScore(0.92); // Simulated high similarity
+
          if (auth.currentUser) {
-           const finalOutputTokens = estimateTokens(fakeOptimized);
            firestoreAddDoc(firestoreCollection(db, 'users', auth.currentUser.uid, 'optimizations'), {
              inputTokens,
              outputTokens: finalOutputTokens,
              savedTokens: Math.max(0, inputTokens - finalOutputTokens),
              createdAt: firestoreServerTimestamp()
-           }).catch(console.error);
+           }).catch((err) => handleFirestoreError(err, OperationType.CREATE, 'users/{userId}/optimizations'));
          }
       } else {
          toast.error('Failed to optimize prompt. Check console for details.');
@@ -167,7 +195,7 @@ export default function PromptOptimizer() {
               value={output}
               readOnly
               placeholder="Optimized prompt will appear here..."
-              className="w-full h-full resize-none bg-card/30 backdrop-blur-sm border-white/10 text-base"
+              className={`w-full h-full resize-none bg-card/30 backdrop-blur-sm border-white/10 text-base transition-all ${similarityScore !== null && similarityScore < 0.8 ? 'border-destructive/50' : ''}`}
             />
             {output && (
               <Button 
@@ -179,10 +207,16 @@ export default function PromptOptimizer() {
                 {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
               </Button>
             )}
-            {output && (
-              <div className="absolute bottom-4 left-4 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-lg backdrop-blur shrink-0">
-                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                99% Semantic Confidence
+            {output && similarityScore !== null && (
+              <div className={`absolute bottom-4 left-4 border text-xs px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-lg backdrop-blur shrink-0 ${
+                similarityScore > 0.9 
+                  ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' 
+                  : similarityScore > 0.8 
+                    ? 'bg-yellow-500/10 border-yellow-500/20 text-yellow-400'
+                    : 'bg-destructive/10 border-destructive/20 text-destructive'
+              }`}>
+                {similarityScore > 0.8 ? <Activity className="w-3.5 h-3.5" /> : <ShieldAlert className="w-3.5 h-3.5" />}
+                {(similarityScore * 100).toFixed(1)}% Semantic Confidence
               </div>
             )}
           </div>

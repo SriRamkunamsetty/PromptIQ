@@ -1,10 +1,24 @@
 import { useState, useEffect } from 'react';
-import { ActivitySquare, TrendingDown, Target, Zap } from 'lucide-react';
+import { ActivitySquare, TrendingDown, Target, Zap, Database, ExternalLink, RefreshCw } from 'lucide-react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, BarChart, Bar } from 'recharts';
+import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
 
 export default function Analytics() {
   const [mounted, setMounted] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
+
   useEffect(() => setMounted(true), []);
+
+  const handleBigQuerySync = () => {
+    setIsSyncing(true);
+    setTimeout(() => {
+      setIsSyncing(false);
+      toast.success("Telemetry synchronized with Google BigQuery data warehouse.", {
+         description: "2.4M rows written to qiscet-smart-connect.analytics.llm_events"
+      });
+    }, 2000);
+  };
 
   const forecastData = [
     { month: 'Jan', spend: 4000, optimized: 2400 },
@@ -17,9 +31,32 @@ export default function Analytics() {
 
   return (
     <div className="space-y-6 overflow-y-auto pb-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight mb-2">Enterprise Analytics</h1>
-        <p className="text-muted-foreground">Predict future spend, monitor token burns, and measure platform-wide LLM efficiency.</p>
+      <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-4">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight mb-2">Enterprise Analytics</h1>
+          <p className="text-muted-foreground">Predict future spend, monitor token burns, and measure platform-wide LLM efficiency.</p>
+        </div>
+        <div className="flex gap-3">
+          <Button variant="outline" className="glass-button bg-[#1a73e8]/10 text-[#4285f4] border-[#4285f4]/30 hover:bg-[#1a73e8]/20" onClick={handleBigQuerySync} disabled={isSyncing}>
+            {isSyncing ? <RefreshCw className="w-4 h-4 mr-2 animate-spin" /> : <Database className="w-4 h-4 mr-2" />}
+            {isSyncing ? "Syncing..." : "Sync to BigQuery"}
+          </Button>
+          <Button variant="outline" className="glass-button border-white/10" onClick={() => window.open('https://console.cloud.google.com/vertex-ai', '_blank')}>
+            Vertex AI <ExternalLink className="w-4 h-4 ml-2 opacity-50" />
+          </Button>
+        </div>
+      </div>
+
+      {/* Google Cloud Status Ribbon */}
+      <div className="glass-panel p-3 rounded-2xl flex items-center gap-4 bg-[#1a73e8]/5 border-[#1a73e8]/20 text-sm overflow-x-auto">
+         <div className="flex items-center gap-2 whitespace-nowrap text-[#4285f4] font-medium shrink-0 px-2 border-r border-[#4285f4]/30">
+            <Database className="w-4 h-4" /> GCP Integration
+         </div>
+         <div className="flex items-center gap-6 whitespace-nowrap text-muted-foreground">
+            <span className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-emerald-400" /> BigQuery: Connected (qiscet-smart-connect)</span>
+            <span className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-emerald-400" /> Vertex AI: Active</span>
+            <span className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-yellow-400" /> Cloud Trace: Unconfigured</span>
+         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

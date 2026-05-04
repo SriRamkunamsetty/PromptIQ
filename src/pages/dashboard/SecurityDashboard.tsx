@@ -47,7 +47,7 @@ export default function SecurityDashboard() {
       console.error(e);
       const msg = typeof e === 'string' ? e : (e?.message || JSON.stringify(e) || '');
       if (e?.status === 429 || e?.error?.code === 429 || msg.includes('429') || msg.includes('quota') || msg.includes('RESOURCE_EXHAUSTED')) {
-        toast.warning("Gemini API quota exceeded. Falling back to simulated simulation.");
+        toast.warning("Gemini API quota exceeded. Falling back to simulated engine.");
         setResult({
            threatScore: 85,
            severity: "high",

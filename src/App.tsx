@@ -24,6 +24,8 @@ import ProductionHealth from './pages/dashboard/ProductionHealth';
 import CostForecasting from './pages/dashboard/CostForecasting';
 import PromptVersioning from './pages/dashboard/PromptVersioning';
 import CaseStudies from './pages/dashboard/CaseStudies';
+import SettingsPage from './pages/dashboard/settings/SettingsPage';
+import SettingsObservability from './pages/dashboard/settings/SettingsObservability';
 
 function ProtectedRoute() {
   const { user, isLoading } = useAuthStore();
@@ -78,6 +80,10 @@ export default function App() {
             <Route path="forecasting" element={<CostForecasting />} />
             <Route path="versioning" element={<PromptVersioning />} />
             <Route path="case-studies" element={<CaseStudies />} />
+            
+            {/* Settings */}
+            <Route path="settings" element={<SettingsPage />} />
+            <Route path="settings-observability" element={<SettingsObservability />} />
           </Route>
         </Route>
       </Routes>

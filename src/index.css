@@ -128,19 +128,22 @@
     }
   body {
     @apply bg-background text-foreground antialiased selection:bg-primary/30 selection:text-primary-foreground;
-    background-image: radial-gradient(circle at 50% -20%, rgba(120, 200, 255, 0.1) 0%, transparent 50%),
-                      radial-gradient(circle at 0% 50%, rgba(180, 100, 255, 0.05) 0%, transparent 40%);
+    background-image: radial-gradient(circle at 50% -20%, rgba(120, 200, 255, var(--neon-glow-opacity, 0.1)) 0%, transparent 50%),
+                      radial-gradient(circle at 0% 50%, rgba(180, 100, 255, calc(var(--neon-glow-opacity, 0.1) * 0.5)) 0%, transparent 40%);
     background-attachment: fixed;
     }
   html {
     @apply font-sans;
+    font-size: var(--font-scaling, 100%);
     }
 }
 
 /* Custom Glossy Utilities */
 @layer utilities {
   .glass-panel {
-    @apply bg-card/40 backdrop-blur-xl border border-white/10 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.5)];
+    background-color: color-mix(in oklch, theme(colors.card) calc(var(--glass-opacity, 40) * 1%), transparent);
+    backdrop-filter: blur(var(--glass-blur, 12px));
+    @apply border border-white/10 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.5)];
   }
   .glass-button {
     @apply relative overflow-hidden bg-primary/10 hover:bg-primary/20 border border-primary/30 hover:border-primary/50 text-primary transition-all duration-300;
@@ -193,3 +196,8 @@ html.high-contrast .glass-panel {
 html.high-contrast .text-muted-foreground {
   color: var(--muted-foreground) !important;
 }
+
+/* Colorblind Filters */
+html.cb-protanomaly { filter: url('#cb-protanomaly') contrast(1.1); }
+html.cb-deuteranomaly { filter: url('#cb-deuteranomaly') contrast(1.1); }
+html.cb-tritanomaly { filter: url('#cb-tritanomaly') contrast(1.1); }

@@ -180,7 +180,7 @@ export default function ContextManager() {
                <Slider 
                   value={[threshold]} 
                   min={0} max={1} step={0.01}
-                  onValueChange={([val]) => setThreshold(val)}
+                  onValueChange={(val) => setThreshold(Array.isArray(val) ? val[0] : val)}
                   disabled={!queryEmbedding}
                   className="w-full"
                />
