@@ -129,7 +129,7 @@ export default function PromptOptimizer() {
   };
 
   return (
-    <div className="space-y-6 flex flex-col h-full min-h-[600px]">
+    <div className="space-y-6 flex flex-col h-full min-h-dashboard">
       <div>
         <h1 className="text-3xl font-bold tracking-tight mb-2">Prompt Optimizer</h1>
         <p className="text-muted-foreground">Compress context and remove redundant tokens to save costs.</p>

@@ -16,7 +16,7 @@ export default function PromptVersioning() {
         <p className="text-muted-foreground">Prompt snapshots, semantic rollbacks, and optimization history tracking.</p>
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-6 flex-1 min-h-[500px]">
+      <div className="grid lg:grid-cols-2 gap-6 flex-1 min-h-dashboard-md">
          <div className="glass-panel p-6 rounded-3xl flex flex-col">
             <h2 className="text-lg font-semibold mb-6 flex items-center gap-2">
                <History className="w-5 h-5 text-primary" /> Evolution Timeline

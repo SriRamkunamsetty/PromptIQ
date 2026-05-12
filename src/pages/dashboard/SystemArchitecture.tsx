@@ -3,7 +3,7 @@ import { Database, Server, Smartphone, Cpu, Shield, Zap, Workflow, ArrowRight } 
 
 export default function SystemArchitecture() {
   return (
-    <div className="space-y-6 flex flex-col min-h-[600px] h-full">
+    <div className="space-y-6 flex flex-col min-h-dashboard h-full">
       <div>
         <h1 className="text-3xl font-bold tracking-tight mb-2">System Architecture</h1>
         <p className="text-muted-foreground">Real-time visualization of the PromptIQ optimization pipeline.</p>
@@ -12,8 +12,8 @@ export default function SystemArchitecture() {
       <div className="glass-panel p-8 rounded-3xl flex-1 flex flex-col items-center justify-center relative overflow-hidden">
         {/* Background Gradients */}
         <div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary rounded-full blur-[100px]" />
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-600 rounded-full blur-[100px]" />
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary rounded-full blur-3xl opacity-50" />
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-600 rounded-full blur-3xl opacity-50" />
         </div>
 
         <div className="relative z-10 w-full max-w-5xl mx-auto flex flex-col space-y-12">
@@ -21,7 +21,7 @@ export default function SystemArchitecture() {
           {/* Top Layer */}
           <div className="flex justify-between items-center w-full">
              <div className="flex flex-col items-center">
-                 <div className="w-16 h-16 rounded-2xl bg-card border border-white/10 flex items-center justify-center mb-3 shadow-[0_0_30px_rgba(255,255,255,0.05)] text-foreground">
+                  <div className="w-16 h-16 rounded-2xl bg-card border border-white/10 flex items-center justify-center mb-3 shadow-xl text-foreground">
                     <Smartphone className="w-8 h-8" />
                  </div>
                  <span className="text-sm font-medium">React Client</span>
@@ -37,7 +37,7 @@ export default function SystemArchitecture() {
 
              <div className="flex flex-col items-center relative">
                  <div className="absolute -inset-4 bg-primary/20 blur-xl rounded-full" />
-                 <div className="w-20 h-20 rounded-2xl bg-primary/10 border border-primary/30 flex items-center justify-center mb-3 text-primary relative shadow-[0_0_40px_rgba(45,212,191,0.2)]">
+                  <div className="w-20 h-20 rounded-2xl bg-primary/10 border border-primary/30 flex items-center justify-center mb-3 text-primary relative shadow-primary-glow">
                     <Workflow className="w-10 h-10" />
                  </div>
                  <span className="text-sm font-bold text-primary">Orchestration Layer</span>
@@ -52,7 +52,7 @@ export default function SystemArchitecture() {
              </motion.div>
 
              <div className="flex flex-col items-center">
-                 <div className="w-16 h-16 rounded-2xl bg-card border border-white/10 flex items-center justify-center mb-3 shadow-[0_0_30px_rgba(255,255,255,0.05)] text-blue-400">
+                  <div className="w-16 h-16 rounded-2xl bg-card border border-white/10 flex items-center justify-center mb-3 shadow-xl text-blue-400">
                     <Cpu className="w-8 h-8" />
                  </div>
                  <span className="text-sm font-medium">Gemini 3.1 APIs</span>

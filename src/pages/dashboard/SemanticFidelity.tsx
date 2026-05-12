@@ -59,7 +59,7 @@ export default function SemanticFidelity() {
               <Activity className="w-5 h-5 text-primary" /> Pre-Optimization Prompt
            </h2>
            <Textarea 
-             className="flex-1 min-h-[150px] resize-none bg-background/50 text-sm font-mono p-4"
+             className="flex-1 min-h-150 resize-none bg-background/50 text-sm font-mono p-4"
              value={original}
              onChange={e => setOriginal(e.target.value)}
            />
@@ -70,7 +70,7 @@ export default function SemanticFidelity() {
               <Target className="w-5 h-5" /> Post-Optimization Prompt
            </h2>
            <Textarea 
-             className="flex-1 min-h-[150px] resize-none bg-emerald-500/5 border-emerald-500/20 text-sm font-mono p-4"
+             className="flex-1 min-h-150 resize-none bg-emerald-500/5 border-emerald-500/20 text-sm font-mono p-4"
              value={optimized}
              onChange={e => setOptimized(e.target.value)}
            />

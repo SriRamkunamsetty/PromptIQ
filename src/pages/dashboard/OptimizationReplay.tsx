@@ -1,15 +1,16 @@
-import { useState, useEffect, useMemo } from 'react';
-import { Film, Play, Pause, SkipBack, SkipForward, Cpu, Bot, Minimize2, CheckCircle2, Zap } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Film, Play, Pause, SkipBack, SkipForward, Cpu, Bot, Minimize2, CheckCircle2, Zap, BrainCircuit, Sparkles, Activity } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 const REPLAY_STAGES = [
-  { id: 1, title: 'Prompt Ingestion', desc: 'Parsing raw input tokens from source dimensions' },
-  { id: 2, title: 'Semantic Vectorization', desc: 'Calculating frequency, weight, and topological cluster' },
-  { id: 3, title: 'Particle Token Destruction', desc: 'Shattering redundant and zero-weight syntax' },
-  { id: 4, title: 'Context Distillation', desc: 'Condensing remaining vectors into dense matrices' },
-  { id: 5, title: 'Semantic Regrouping', desc: 'Fusing optimal concepts into highly retained pathways' },
-  { id: 6, title: 'Final Assembly', desc: 'Constructing execution-ready ultra-dense prompt' },
+  { id: 1, title: 'Neural Ingestion', desc: 'Parsing raw input tokens from source dimensions', icon: BrainCircuit, color: 'text-sky-400' },
+  { id: 2, title: 'Topological Analysis', desc: 'Calculating frequency, weight, and topological cluster', icon: Activity, color: 'text-blue-400' },
+  { id: 3, title: 'Particle Destruction', desc: 'Shattering redundant and zero-weight syntax', icon: Zap, color: 'text-red-500' },
+  { id: 4, title: 'Context Distillation', desc: 'Condensing remaining vectors into dense matrices', icon: Minimize2, color: 'text-fuchsia-400' },
+  { id: 5, title: 'Semantic Regrouping', desc: 'Fusing optimal concepts into highly retained pathways', icon: Sparkles, color: 'text-emerald-400' },
+  { id: 6, title: 'Final Assembly', desc: 'Constructing execution-ready ultra-dense prompt', icon: CheckCircle2, color: 'text-emerald-500' },
 ];
 
 export default function OptimizationReplay() {
@@ -27,7 +28,7 @@ export default function OptimizationReplay() {
            }
            return prev + 1;
         });
-      }, 2500); // 2.5 sec per stage for dramatic effect
+      }, 3000);
     }
     return () => clearInterval(interval);
   }, [isPlaying, currentStage]);
@@ -40,205 +41,231 @@ export default function OptimizationReplay() {
   };
 
   return (
-    <div className="space-y-6 flex flex-col h-full overflow-y-auto pb-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight mb-2">Optimization Replay Engine</h1>
-        <p className="text-muted-foreground">Cinematic playback of the token elimination and semantic regrouping pipeline.</p>
+    <div className="flex flex-col h-full space-y-8">
+      <div className="flex items-end justify-between">
+        <div>
+          <h1 className="text-4xl font-black tracking-tighter text-white uppercase mb-2">Neural Optimization <span className="text-primary">Runtime</span></h1>
+          <p className="text-muted-foreground/80 font-medium tracking-wide">Cinematic visualization of the semantic pruning & context distillation pipeline.</p>
+        </div>
+        <div className="flex gap-4">
+           <div className="glass-panel px-6 py-2 rounded-2xl flex items-center gap-3">
+              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,1)]" />
+              <span className="text-[10px] font-black uppercase tracking-widest text-white/60">System Online</span>
+           </div>
+        </div>
       </div>
 
-      <div className="glass-panel p-8 rounded-3xl flex-1 flex flex-col items-center justify-center relative overflow-hidden bg-[url('/grid.svg')] bg-center bg-[size:3rem_3rem]">
-         {/* Deep Infrastructure Glow */}
-         <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 to-transparent z-0" />
-         <div className="absolute inset-0 z-0 opacity-30 pointer-events-none transition-colors duration-1000 mix-blend-screen" style={{
-           backgroundColor: currentStage === 2 ? 'rgba(239, 68, 68, 0.15)' : currentStage > 3 ? 'rgba(52, 211, 153, 0.15)' : 'rgba(14, 165, 233, 0.1)'
-         }} />
+      <div className="flex-1 flex flex-col lg:flex-row gap-6 min-h-0">
+        {/* Cinematic Replay Viewport */}
+        <div className="flex-1 glass-panel rounded-[2.5rem] relative overflow-hidden flex flex-col group/viewport">
+          <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-10" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/60 pointer-events-none" />
+          
+          {/* Dynamic Background Glows */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentStage}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 pointer-events-none transition-colors duration-1000"
+              style={{
+                background: currentStage === 2 
+                  ? 'radial-gradient(circle at center, oklch(0.65 0.22 25 / 0.1) 0%, transparent 70%)'
+                  : currentStage >= 4 
+                  ? 'radial-gradient(circle at center, oklch(0.7 0.15 160 / 0.1) 0%, transparent 70%)'
+                  : 'radial-gradient(circle at center, oklch(0.78 0.15 255 / 0.1) 0%, transparent 70%)'
+              }}
+            />
+          </AnimatePresence>
 
-         <div className="relative z-10 w-full max-w-4xl mx-auto flex flex-col h-full">
-            <div className="flex-1 flex items-center justify-center min-h-[300px]">
-                 <AnimatePresence mode="wait">
-                    <motion.div
-                       key={currentStage}
-                       initial={{ opacity: 0, scale: 0.85, filter: 'blur(10px)' }}
-                       animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-                       exit={{ opacity: 0, scale: 1.15, filter: 'blur(5px)' }}
-                       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                       className="flex flex-col items-center text-center space-y-8 w-full"
-                    >
-                       <div className="w-full relative h-[160px] flex items-center justify-center perspective-[1000px]">
-                          {/* Animated Cinematic Visualizer */}
-                          <div className="absolute inset-0 flex items-center justify-center pointer-events-none perspective-1000">
-                             
-                             {/* Source tokens falling in */}
-                             {currentStage === 0 && (
-                               <div className="flex gap-2 flex-wrap max-w-sm justify-center transform-gpu -rotate-x-12">
-                                  {Array.from({length: 45}).map((_, i) => (
-                                    <motion.div 
-                                      key={`s0-${i}`} 
-                                      initial={{ opacity: 0, z: -500, y: -100 }} 
-                                      animate={{ opacity: 0.8, z: 0, y: 0 }} 
-                                      transition={{ delay: i*0.02, type: 'spring', damping: 20 }} 
-                                      className="w-6 h-3 rounded-[2px] bg-sky-400/20 shadow-[0_0_10px_rgba(56,189,248,0.5)] border border-sky-400/50" 
-                                    />
-                                  ))}
-                               </div>
-                             )}
+          <div className="flex-1 flex items-center justify-center relative p-12">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentStage}
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 1.1, y: -20 }}
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                className="w-full flex flex-col items-center"
+              >
+                <div className="relative mb-12">
+                  <div className="w-32 h-32 rounded-huge glass-panel bg-white/5 flex items-center justify-center border-white/10 relative z-20 group shadow-2xl">
+                    <div className="absolute inset-0 bg-primary/10 blur-2xl group-hover:bg-primary/20 transition-all opacity-50" />
+                    {(() => {
+                      const StageIcon = REPLAY_STAGES[currentStage].icon;
+                      return <StageIcon className={cn("w-14 h-14 transition-all duration-700", REPLAY_STAGES[currentStage].color)} />;
+                    })()}
+                  </div>
+                  
+                  {/* Floating Particle Flow */}
+                  <div className="absolute inset-[-100px] flex items-center justify-center pointer-events-none z-10">
+                    {currentStage === 0 && (
+                      <div className="flex gap-2 flex-wrap max-w-sm justify-center">
+                        {Array.from({length: 40}).map((_, i) => (
+                          <motion.div 
+                            key={i} 
+                            initial={{ opacity: 0, scale: 0, y: -100 }}
+                            animate={{ opacity: 0.6, scale: 1, y: 0 }}
+                            transition={{ delay: i * 0.01, duration: 1 }}
+                            className="w-4 h-2 rounded-full bg-primary/30 border border-primary/50"
+                          />
+                        ))}
+                      </div>
+                    )}
+                    {currentStage === 2 && (
+                      <div className="relative w-full h-full">
+                         {Array.from({length: 30}).map((_, i) => (
+                           <motion.div
+                             key={i}
+                             initial={{ x: 0, y: 0, opacity: 1, scale: 1 }}
+                             animate={{ 
+                               x: (Math.random() - 0.5) * 400, 
+                               y: (Math.random() - 0.5) * 400, 
+                               opacity: 0, 
+                               scale: 0,
+                               rotate: (Math.random() - 0.5) * 720
+                             }}
+                             transition={{ duration: 1.5, ease: "easeOut" }}
+                             className="absolute left-1/2 top-1/2 w-4 h-4 bg-red-500/80 rounded-sm shadow-lg"
+                           />
+                         ))}
+                      </div>
+                    )}
+                    {currentStage === 4 && (
+                      <div className="relative w-full h-full flex items-center justify-center">
+                        <motion.div 
+                          animate={{ scale: [1, 1.5, 1], opacity: [0.2, 0.4, 0.2] }}
+                          transition={{ duration: 2, repeat: Infinity }}
+                          className="absolute w-64 h-64 bg-emerald-500/20 blur-[60px] rounded-full"
+                        />
+                         {Array.from({length: 20}).map((_, i) => (
+                           <motion.div
+                             key={i}
+                             initial={{ x: (Math.random() - 0.5) * 300, y: (Math.random() - 0.5) * 300, opacity: 0 }}
+                             animate={{ x: 0, y: 0, opacity: 1 }}
+                             transition={{ duration: 1, delay: i * 0.05 }}
+                             className="absolute w-6 h-3 bg-emerald-400/60 rounded-full border border-emerald-300"
+                           />
+                         ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
 
-                             {/* Highlighting topological clusters */}
-                             {currentStage === 1 && (
-                               <div className="flex gap-2 flex-wrap max-w-sm justify-center">
-                                  {Array.from({length: 45}).map((_, i) => {
-                                      const isRedundant = i % 4 === 0 || i % 7 === 0;
-                                      const isAction = i % 5 === 0;
-                                      return (
-                                        <motion.div 
-                                          key={`s1-${i}`} 
-                                          initial={{ scale: 1, opacity: 0.8, backgroundColor: 'rgba(56,189,248,0.2)', borderColor: 'rgba(56,189,248,0.5)' }}
-                                          animate={{ 
-                                            scale: isRedundant ? 0.9 : isAction ? 1.2 : 1, 
-                                            opacity: 1,
-                                            backgroundColor: isRedundant ? 'rgba(239, 68, 68, 0.4)' : isAction ? 'rgba(250, 204, 21, 0.4)' : 'rgba(56,189,248,0.2)',
-                                            borderColor: isRedundant ? 'rgba(239, 68, 68, 0.8)' : isAction ? 'rgba(250, 204, 21, 0.8)' : 'rgba(56,189,248,0.5)'
-                                          }} 
-                                          transition={{ duration: 0.6, delay: i*0.01 }}
-                                          className="w-6 h-3 rounded-[2px] border" 
-                                        />
-                                      );
-                                  })}
-                               </div>
-                             )}
+                <div className="max-w-md text-center">
+                   <motion.div className="inline-block px-4 py-1 rounded-full border border-primary/20 bg-primary/5 mb-6">
+                      <span className="text-[10px] font-black uppercase tracking-ultra text-primary">Execution Phase 0{currentStage + 1}</span>
+                   </motion.div>
+                   <h2 className="text-5xl font-black text-white tracking-tighter mb-4 uppercase">{REPLAY_STAGES[currentStage].title}</h2>
+                   <p className="text-lg text-muted-foreground/80 font-medium leading-relaxed">{REPLAY_STAGES[currentStage].desc}</p>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
 
-                             {/* Particle Destruction */}
-                             {currentStage === 2 && (
-                               <div className="flex gap-2 flex-wrap max-w-sm justify-center relative">
-                                  {Array.from({length: 45}).map((_, i) => {
-                                     const isRedundant = i % 4 === 0 || i % 7 === 0;
-                                     const isAction = i % 5 === 0;
-                                     return isRedundant ? (
-                                        <motion.div 
-                                          key={`s2-shatter-${i}`}
-                                          initial={{ scale: 0.9, opacity: 1, rotate: 0 }}
-                                          animate={{ scale: 0, opacity: 0, rotate: (Math.random() - 0.5) * 360, x: (Math.random() - 0.5) * 100, y: (Math.random() - 0.5) * 100 }}
-                                          transition={{ duration: 1, ease: "circOut" }}
-                                          className="w-6 h-3 rounded-[2px] bg-red-500/80 shadow-[0_0_20px_rgba(239,68,68,1)] border border-red-400 absolute"
-                                          style={{ zIndex: 50 }}
-                                        />
-                                     ) : (
-                                        <motion.div 
-                                          key={`s2-keep-${i}`} 
-                                          animate={{ opacity: 0.7 }} 
-                                          className={`w-6 h-3 rounded-[2px] border ${isAction ? 'bg-yellow-400/40 border-yellow-400/80' : 'bg-sky-400/20 border-sky-400/50'}`} 
-                                        />
-                                     );
-                                  })}
-                               </div>
-                             )}
-
-                             {/* Matrix Distillation */}
-                             {currentStage === 3 && (
-                               <div className="flex gap-1.5 flex-wrap max-w-[280px] justify-center items-center">
-                                  {Array.from({length: 25}).map((_, i) => (
-                                    <motion.div 
-                                      key={`s3-${i}`} 
-                                      initial={{ scale: 1, filter: 'contrast(100%)' }}
-                                      animate={{ scale: [1, 0.8, 1], filter: 'contrast(200%) brightness(150%)', opacity: 0.9 }} 
-                                      transition={{ duration: 2, repeat: Infinity, repeatType: 'reverse', delay: i * 0.05 }}
-                                      className="w-5 h-2.5 rounded-[1px] bg-fuchsia-500/40 border border-fuchsia-400/60 shadow-[0_0_8px_rgba(217,70,239,0.5)]" 
-                                    />
-                                  ))}
-                               </div>
-                             )}
-
-                             {/* Semantic Regrouping Fusion */}
-                             {currentStage === 4 && (
-                               <div className="flex gap-1 flex-wrap max-w-[150px] justify-center relative">
-                                  {Array.from({length: 12}).map((_, i) => (
-                                    <motion.div 
-                                      key={`s4-${i}`} 
-                                      initial={{ scale: 0.1, x: (Math.random() - 0.5) * 200, y: (Math.random() - 0.5) * 200, opacity: 0 }} 
-                                      animate={{ scale: 1.2, x: 0, y: 0, opacity: 1 }} 
-                                      transition={{ type: 'spring', stiffness: 50, damping: 10, delay: i * 0.1 }} 
-                                      className="w-8 h-4 rounded-[3px] bg-emerald-400/50 shadow-[0_0_15px_rgba(52,211,153,0.8)] border border-emerald-400" 
-                                    />
-                                  ))}
-                                  <motion.div className="absolute inset-0 bg-emerald-400/20 mix-blend-screen blur-xl rounded-full" animate={{ scale: [1, 1.5, 1], opacity: [0.3, 0.6, 0.3] }} transition={{ duration: 2, repeat: Infinity }} />
-                               </div>
-                             )}
-
-                             {/* Final Output Sparkle */}
-                             {currentStage === 5 && (
-                               <div className="flex gap-2 flex-wrap max-w-[180px] justify-center">
-                                  {Array.from({length: 8}).map((_, i) => (
-                                    <motion.div 
-                                      key={`s5-${i}`} 
-                                      initial={{ scale: 1.2, opacity: 0.5, backgroundColor: 'rgba(52,211,153,0.5)' }}
-                                      animate={{ scale: 1, opacity: 1, backgroundColor: 'rgba(16,185,129,0.8)', boxShadow: '0 0 25px rgba(16,185,129,0.9)' }}
-                                      transition={{ duration: 0.5, delay: i * 0.05 }}
-                                      className="w-10 h-5 rounded-[4px] border border-emerald-300 relative overflow-hidden" 
-                                    >
-                                       <motion.div className="absolute inset-y-0 -left-full w-full bg-gradient-to-r from-transparent via-white/80 to-transparent skew-x-[-20deg]" animate={{ left: ['-100%', '200%'] }} transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 2, delay: i * 0.2 }} />
-                                    </motion.div>
-                                  ))}
-                               </div>
-                             )}
-                          </div>
-                          
-                          <div className="w-28 h-28 rounded-[2rem] bg-black/40 backdrop-blur-xl border border-white/20 flex items-center justify-center shadow-[0_0_60px_rgba(0,0,0,0.8),inset_0_0_20px_rgba(255,255,255,0.1)] z-10 relative overflow-hidden group">
-                             <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-50" />
-                             {currentStage === 0 && <Cpu className="w-12 h-12 text-sky-400 drop-shadow-[0_0_10px_rgba(56,189,248,0.8)]" />}
-                             {currentStage === 1 && <Bot className="w-12 h-12 text-blue-400 drop-shadow-[0_0_10px_rgba(96,165,250,0.8)]" />}
-                             {currentStage === 2 && <Zap className="w-12 h-12 text-red-500 drop-shadow-[0_0_15px_rgba(239,68,68,1)] animate-pulse" />}
-                             {currentStage === 3 && <Minimize2 className="w-12 h-12 text-fuchsia-400 drop-shadow-[0_0_10px_rgba(232,121,249,0.8)]" />}
-                             {currentStage === 4 && <Bot className="w-12 h-12 text-emerald-400 drop-shadow-[0_0_10px_rgba(52,211,153,0.8)]" />}
-                             {currentStage === 5 && <CheckCircle2 className="w-12 h-12 text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,1)]" />}
-                          </div>
-                       </div>
-                       
-                       <div>
-                          <p className="text-xs font-mono text-primary mb-3 uppercase tracking-[0.3em]">Phase 0{currentStage + 1}</p>
-                          <h2 className="text-4xl lg:text-5xl font-black text-white drop-shadow-md tracking-tight mb-4">{REPLAY_STAGES[currentStage]?.title}</h2>
-                          <p className="text-lg text-muted-foreground max-w-md mx-auto">{REPLAY_STAGES[currentStage]?.desc}</p>
-                       </div>
-                    </motion.div>
-                 </AnimatePresence>
-            </div>
-
-            {/* Playback Controls & Timeline */}
-            <div className="mt-8 bg-black/40 backdrop-blur-2xl p-6 rounded-3xl border border-white/5 relative z-20">
-               <div className="flex items-center justify-between gap-2 mb-8 px-2">
-                  {REPLAY_STAGES.map((stage, i) => (
-                    <div key={stage.id} className="flex-1 flex flex-col gap-3 group cursor-pointer relative" onClick={() => setCurrentStage(i)}>
-                       <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[1px] bg-white/10 -z-10" />
-                       <div className={`h-2 rounded-full transition-all duration-700 w-full relative z-10 ${
-                         i < currentStage ? 'bg-primary' : 
-                         i === currentStage ? 'bg-primary shadow-[0_0_20px_rgba(56,189,248,0.8)]' : 
-                         'bg-white/10'
-                       }`} />
+          {/* Timeline & Controls Overlay */}
+          <div className="p-8 bg-black/40 backdrop-blur-3xl border-t border-white/5 relative z-30">
+            <div className="flex items-center gap-4 mb-8">
+               {REPLAY_STAGES.map((stage, i) => (
+                 <div 
+                   key={i} 
+                   className="flex-1 h-1.5 rounded-full relative cursor-pointer group"
+                   onClick={() => { setCurrentStage(i); setIsPlaying(false); }}
+                 >
+                    <div className={cn(
+                      "absolute inset-0 rounded-full transition-all duration-700",
+                      i <= currentStage ? "bg-primary shadow-primary-glow-sm" : "bg-white/10"
+                    )} />
+                    <div className="absolute top-4 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap text-[8px] font-black uppercase tracking-extrawide text-primary">
+                       {stage.title}
                     </div>
-                  ))}
-               </div>
-
-               <div className="flex justify-center flex-col items-center gap-2">
-                 <div className="flex justify-center items-center gap-6">
-                    <Button variant="ghost" size="icon" onClick={() => setCurrentStage(Math.max(0, currentStage - 1))} className="hover:bg-white/10 hover:text-white rounded-full">
-                       <SkipBack className="w-5 h-5" />
-                    </Button>
-                    <Button 
-                       size="lg"
-                       onClick={handlePlay}
-                       className="w-16 h-16 rounded-full bg-primary/10 text-primary border border-primary/40 hover:bg-primary/20 shadow-[0_0_20px_rgba(56,189,248,0.15)] hover:shadow-[0_0_30px_rgba(56,189,248,0.3)] transition-all"
-                    >
-                       {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6 ml-1.5" />}
-                    </Button>
-                    <Button variant="ghost" size="icon" onClick={() => setCurrentStage(Math.min(REPLAY_STAGES.length - 1, currentStage + 1))} className="hover:bg-white/10 hover:text-white rounded-full">
-                       <SkipForward className="w-5 h-5" />
-                    </Button>
                  </div>
-                 <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold mt-4">
-                     Playback Controls
-                 </div>
-               </div>
+               ))}
             </div>
-         </div>
+
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-6">
+                <Button variant="ghost" size="icon" onClick={() => setCurrentStage(Math.max(0, currentStage - 1))} className="w-12 h-12 rounded-full border border-white/5 hover:bg-white/5">
+                  <SkipBack className="w-5 h-5 text-white" />
+                </Button>
+                <Button 
+                  onClick={handlePlay}
+                  className="w-16 h-16 rounded-full bg-primary text-primary-foreground shadow-primary-glow hover:scale-105 transition-all"
+                >
+                  {isPlaying ? <Pause className="w-8 h-8" /> : <Play className="w-8 h-8 ml-1" />}
+                </Button>
+                <Button variant="ghost" size="icon" onClick={() => setCurrentStage(Math.min(REPLAY_STAGES.length - 1, currentStage + 1))} className="w-12 h-12 rounded-full border border-white/5 hover:bg-white/5">
+                  <SkipForward className="w-5 h-5 text-white" />
+                </Button>
+              </div>
+
+              <div className="flex items-center gap-8">
+                 <div className="flex flex-col items-end">
+                    <span className="text-[10px] uppercase tracking-extrawide text-muted-foreground font-black mb-1">Inference Speed</span>
+                    <span className="text-xl font-bold text-white tracking-tighter">0.4x Optimized</span>
+                 </div>
+                 <div className="flex flex-col items-end">
+                    <span className="text-[10px] uppercase tracking-extrawide text-muted-foreground font-black mb-1">Redundancy Δ</span>
+                    <span className="text-xl font-bold text-red-400 tracking-tighter">-64.2%</span>
+                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Neural Logic Feed */}
+        <div className="w-full lg:w-96 flex flex-col gap-6">
+           <div className="glass-panel p-8 rounded-[2.5rem] border-white/5 flex flex-col h-[400px]">
+              <div className="flex items-center justify-between mb-6">
+                 <div className="flex items-center gap-2">
+                    <Cpu className="w-4 h-4 text-primary" />
+                    <span className="text-[10px] font-black uppercase tracking-extrawide text-white">Live Execution Feed</span>
+                 </div>
+              </div>
+              <div className="flex-1 overflow-y-auto custom-scrollbar font-mono text-[10px] space-y-3">
+                 {[
+                   `[0.00ms] INITIALIZING NEURAL PIPELINE...`,
+                   `[12.4ms] PARSING TOKENS: [ID: 0x9f22, COUNT: 452]`,
+                   `[45.8ms] ANALYZING SEMANTIC TOPOLOGY...`,
+                   `[102.1ms] CLUSTERING NODES: [DENSITY: 0.84]`,
+                   `[230.5ms] IDENTIFYING ZERO-WEIGHT SYNTAX...`,
+                   `[245.2ms] SHATTERING REDUNDANT FRAGMENTS...`,
+                   `[412.9ms] CONDENSING CONTEXTUAL MATRICES...`,
+                   `[560.1ms] FUSING OPTIMAL PATHWAYS...`,
+                   `[780.4ms] VALIDATING SEMANTIC FIDELITY...`,
+                   `[890.2ms] FINAL ASSEMBLY COMPLETE.`
+                 ].slice(0, (currentStage + 1) * 2).map((log, i) => (
+                   <motion.div 
+                     initial={{ opacity: 0, x: -10 }} 
+                     animate={{ opacity: 1, x: 0 }} 
+                     key={i} 
+                     className={cn(i === (currentStage + 1) * 2 - 1 ? "text-primary" : "text-muted-foreground/60")}
+                   >
+                     {log}
+                   </motion.div>
+                 ))}
+              </div>
+           </div>
+
+           <div className="glass-panel p-8 rounded-[2.5rem] border-white/5 flex-1 relative overflow-hidden group">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent" />
+              <Bot className="w-8 h-8 text-primary mb-6" />
+              <h3 className="text-xl font-black text-white uppercase tracking-tighter mb-4">Optimization Strategy</h3>
+              <p className="text-sm text-muted-foreground/80 leading-relaxed font-medium">
+                The current pipeline is utilizing **Recursive Semantic Pruning** to minimize token overhead by {REPLAY_STAGES[currentStage]?.id * 10}% without losing high-dimensional intent.
+              </p>
+              <div className="mt-8 flex flex-col gap-2">
+                 <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-extrawide text-muted-foreground">
+                    <span>Precision</span>
+                    <span className="text-white">99.2%</span>
+                 </div>
+                 <div className="h-1 bg-white/5 rounded-full overflow-hidden">
+                    <motion.div animate={{ width: '99.2%' }} className="h-full bg-primary" />
+                 </div>
+              </div>
+           </div>
+        </div>
       </div>
     </div>
   );

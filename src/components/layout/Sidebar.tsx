@@ -1,10 +1,9 @@
-import React, { HTMLAttributes } from 'react';
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, 
   Sparkles, 
   Rows3, 
-  BarChart3, 
   Settings, 
   LogOut,
   BrainCircuit,
@@ -28,6 +27,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { auth } from '@/lib/firebase';
 import { signOut } from 'firebase/auth';
+import { motion } from 'framer-motion';
 
 interface SidebarProps {
   className?: string;
@@ -42,67 +42,86 @@ export function Sidebar({ className }: SidebarProps) {
 
   const navItems = [
     { icon: LayoutDashboard, label: 'Overview', href: '/dashboard' },
-    { icon: Bot, label: 'Autonomous Agent', href: '/dashboard/agent' },
-    { icon: Sparkles, label: 'Prompt Optimizer', href: '/dashboard/optimizer' },
-    { icon: Rows3, label: 'Context Manager', href: '/dashboard/context' },
-    { icon: Film, label: 'Optimization Replay', href: '/dashboard/replay' },
-    { icon: Microscope, label: 'Semantic Fidelity', href: '/dashboard/fidelity' },
-    { icon: DatabaseZap, label: 'Semantic Cache', href: '/dashboard/cache' },
-    { icon: BugPlay, label: 'Prompt Debugger', href: '/dashboard/debugger' },
-    { icon: GitCommit, label: 'Version Control', href: '/dashboard/versioning' },
-    { icon: Network, label: 'Model Router', href: '/dashboard/router' },
-    { icon: BarChart3, label: 'Benchmarks', href: '/dashboard/benchmarks' },
+    { icon: Bot, label: 'Agent Runtime', href: '/dashboard/agent' },
+    { icon: Sparkles, label: 'Optimizer', href: '/dashboard/optimizer' },
+    { icon: Rows3, label: 'Context', href: '/dashboard/context' },
+    { icon: Film, label: 'Replay Engine', href: '/dashboard/replay' },
+    { icon: Microscope, label: 'Fidelity', href: '/dashboard/fidelity' },
+    { icon: DatabaseZap, label: 'Cache', href: '/dashboard/cache' },
+    { icon: BugPlay, label: 'Debugger', href: '/dashboard/debugger' },
+    { icon: GitCommit, label: 'Versioning', href: '/dashboard/versioning' },
+    { icon: Network, label: 'Router', href: '/dashboard/router' },
     { icon: Activity, label: 'Observability', href: '/dashboard/runtime' },
-    { icon: HeartPulse, label: 'Runtime Health', href: '/dashboard/health' },
+    { icon: HeartPulse, label: 'Health', href: '/dashboard/health' },
     { icon: ActivitySquare, label: 'Analytics', href: '/dashboard/analytics' },
-    { icon: TrendingUp, label: 'Cost Forecasting', href: '/dashboard/forecasting' },
-    { icon: Cpu, label: 'System Architecture', href: '/dashboard/system' },
-    { icon: ShieldAlert, label: 'Security Intelligence', href: '/dashboard/security' },
-    { icon: Accessibility, label: 'Accessibility', href: '/dashboard/accessibility' },
-    { icon: BookOpen, label: 'Case Studies', href: '/dashboard/case-studies' },
+    { icon: TrendingUp, label: 'Forecasting', href: '/dashboard/forecasting' },
+    { icon: Cpu, label: 'Architecture', href: '/dashboard/system' },
+    { icon: ShieldAlert, label: 'Security', href: '/dashboard/security' },
   ];
 
   return (
-    <div className={cn("pb-12 border-r border-border/40 bg-card/20 backdrop-blur-md flex flex-col h-full", className)}>
-      <div className="space-y-4 py-4 flex-1 overflow-hidden flex flex-col">
-        <div className="px-3 py-2 flex-1 flex flex-col min-h-0">
-          <div className="flex items-center px-4 mb-6 mt-2 shrink-0">
-            <BrainCircuit className="w-8 h-8 text-primary mr-3" />
-            <h2 className="text-2xl font-semibold tracking-tight text-gradient">
-              PromptIQ
-            </h2>
+    <div className={cn("h-screen p-4 flex flex-col z-50", className)}>
+      <div className="glass-panel rounded-huge flex flex-col h-full border-white/5 shadow-2xl relative overflow-hidden group">
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-primary/5 opacity-50" />
+        
+        <div className="relative z-10 flex flex-col h-full">
+          <div className="px-6 py-8 mb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-primary flex items-center justify-center shadow-primary-glow">
+                <BrainCircuit className="w-6 h-6 text-primary-foreground" />
+              </div>
+              <div>
+                <h2 className="text-lg font-black tracking-tighter text-white uppercase leading-none">Prompt<span className="text-primary">IQ</span></h2>
+                <span className="text-[10px] uppercase tracking-extrawide text-primary/60 font-bold">Runtime 2.5</span>
+              </div>
+            </div>
           </div>
-          <div className="space-y-1 overflow-y-auto flex-1 pr-2 pb-2 custom-scrollbar">
-            {navItems.map((item) => (
-              <Link key={item.href} to={item.href}>
-                <Button
-                  variant={location.pathname === item.href ? "secondary" : "ghost"}
-                  className={cn(
-                    "w-full justify-start mb-1 gap-3",
-                    location.pathname === item.href 
-                      ? "bg-primary/20 hover:bg-primary/30 text-primary border border-primary/20" 
-                      : "hover:bg-card/50 text-muted-foreground hover:text-foreground"
-                  )}
-                >
-                  <item.icon className="h-4 w-4" />
-                  {item.label}
-                </Button>
-              </Link>
-            ))}
+
+          <div className="flex-1 overflow-y-auto px-4 custom-scrollbar space-y-1 pb-4">
+            {navItems.map((item) => {
+              const isActive = location.pathname === item.href;
+              return (
+                <Link key={item.href} to={item.href}>
+                  <Button
+                    variant="ghost"
+                    className={cn(
+                      "w-full justify-start h-12 gap-4 rounded-xl transition-all duration-300 relative group/btn overflow-hidden",
+                      isActive 
+                        ? "bg-primary/10 text-primary border border-primary/20 shadow-primary-glow-sm" 
+                        : "text-muted-foreground hover:text-white hover:bg-white/5"
+                    )}
+                  >
+                    {isActive && (
+                      <motion.div 
+                        layoutId="active-pill" 
+                        className="absolute left-0 w-1 h-6 bg-primary rounded-r-full shadow-primary-glow-intense" 
+                      />
+                    )}
+                    <item.icon className={cn("h-5 w-5 transition-transform duration-300 group-hover/btn:scale-110", isActive ? "text-primary" : "text-muted-foreground")} />
+                    <span className="text-xs font-bold uppercase tracking-widest">{item.label}</span>
+                  </Button>
+                </Link>
+              );
+            })}
+          </div>
+
+          <div className="p-4 border-t border-white/5 bg-black/20 backdrop-blur-xl">
+            <Link to="/dashboard/settings">
+              <Button variant="ghost" className={cn("w-full justify-start h-12 gap-4 rounded-xl mb-1", location.pathname.startsWith('/dashboard/settings') ? "bg-white/10 text-white" : "text-muted-foreground hover:text-white")}>
+                <Settings className="h-5 w-5" />
+                <span className="text-xs font-bold uppercase tracking-widest">Settings</span>
+              </Button>
+            </Link>
+            <Button 
+              variant="ghost" 
+              className="w-full justify-start h-12 gap-4 rounded-xl text-muted-foreground hover:text-red-400 hover:bg-red-500/10 transition-colors" 
+              onClick={handleSignOut}
+            >
+              <LogOut className="h-5 w-5" />
+              <span className="text-xs font-bold uppercase tracking-widest">Disconnect</span>
+            </Button>
           </div>
         </div>
-      </div>
-      <div className="px-3 py-2 flex flex-col gap-1">
-        <Link to="/dashboard/settings">
-          <Button variant={location.pathname.startsWith('/dashboard/settings') ? "secondary" : "ghost"} className={cn("w-full justify-start gap-3", location.pathname.startsWith('/dashboard/settings') ? "bg-primary/20 hover:bg-primary/30 text-primary border border-primary/20" : "hover:bg-card/50 text-muted-foreground hover:text-foreground")}>
-            <Settings className="h-4 w-4" />
-            Settings
-          </Button>
-        </Link>
-        <Button variant="ghost" className="w-full justify-start gap-3 hover:bg-destructive/10 hover:text-destructive text-muted-foreground" onClick={handleSignOut}>
-          <LogOut className="h-4 w-4" />
-          Sign Out
-        </Button>
       </div>
     </div>
   );

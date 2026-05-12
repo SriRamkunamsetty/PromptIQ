@@ -42,7 +42,7 @@ export default function SemanticCache() {
           </div>
       </div>
 
-      <div className="glass-panel p-6 rounded-3xl flex-1 flex flex-col bg-[url('/grid.svg')] bg-center min-h-[400px]">
+      <div className="glass-panel p-6 rounded-3xl flex-1 flex flex-col bg-grid-pattern min-h-dashboard-sm">
          <h2 className="text-lg font-semibold mb-6 flex items-center gap-2">
             <Network className="w-5 h-5 text-primary" /> Semantic Hit Feed
          </h2>
