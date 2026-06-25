@@ -1,0 +1,146 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: oklch(0.78 0.15 255);
+  --color-background: oklch(0 0 0);
+  --color-foreground: oklch(0.98 0.01 255);
+}
+
+:root {
+  --primary: oklch(0.78 0.15 255);
+  --glass-blur: 16px;
+  --glass-opacity: 0.1;
+  --neon-glow-opacity: 0.4;
+}
+
+@layer base {
+  * {
+    @apply border-white/5;
+  }
+  body {
+    @apply bg-black text-white selection:bg-primary/30;
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+@layer utilities {
+  .glass-panel {
+    background: linear-gradient(135deg, oklch(1 0 0 / 0.05) 0%, oklch(1 0 0 / 0.01) 100%);
+    backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid oklch(1 0 0 / 0.1);
+    box-shadow: 0 8px 32px -4px rgba(0, 0, 0, 0.6);
+  }
+
+  .floating-card {
+    transition: all 0.5s ease;
+  }
+  .floating-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.8), 0 0 20px oklch(from var(--primary) l c h / 0.2);
+  }
+
+  .text-glow {
+    text-shadow: 0 0 15px oklch(from var(--primary) l c h / 0.4);
+  }
+
+  .shadow-primary-glow {
+    box-shadow: 0 0 20px oklch(from var(--primary) l c h / 0.4);
+  }
+  
+  .shadow-primary-glow-sm {
+    box-shadow: 0 0 15px oklch(from var(--primary) l c h / 0.1);
+  }
+
+  .shadow-primary-glow-intense {
+    box-shadow: 0 0 10px oklch(from var(--primary) l c h / 1);
+  }
+
+  .rounded-huge { border-radius: 2rem; }
+  .rounded-colossal { border-radius: 2.5rem; }
+  .tracking-extrawide { letter-spacing: 0.3em; }
+  .tracking-superwide { letter-spacing: 0.4em; }
+  .tracking-ultra { letter-spacing: 0.5em; }
+  .tracking-wide-extra { letter-spacing: 0.2em; }
+
+  .min-h-dashboard { min-height: 600px; }
+  .min-h-dashboard-md { min-height: 500px; }
+  .min-h-dashboard-sm { min-height: 400px; }
+  .min-h-150 { min-height: 150px; }
+
+  .bg-grid-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 40 L40 40 L40 0 M0 0 L0 40' fill='none' stroke='rgba(255,255,255,0.03)' stroke-width='1'/%3E%3C/svg%3E");
+  }
+
+  .neural-bg {
+    background: 
+      radial-gradient(circle at 50% 50%, oklch(from var(--primary) l c h / 0.05) 0%, transparent 70%),
+      linear-gradient(to right, oklch(1 0 0 / 0.02) 1px, transparent 1px),
+      linear-gradient(to bottom, oklch(1 0 0 / 0.02) 1px, transparent 1px);
+    background-size: 100% 100%, 40px 40px, 40px 40px;
+  }
+
+  .scanline-effect {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent 50%, oklch(0 0 0 / 0.1) 50%);
+    background-size: 100% 4px;
+    pointer-events: none;
+    z-index: 50;
+    opacity: 0.1;
+  }
+
+  .token-waste-stream {
+    background: linear-gradient(to bottom, transparent, oklch(from var(--primary) l c h / 0.1), transparent);
+    width: 2px;
+    height: 100px;
+    position: absolute;
+    animation: token-drop 3s linear infinite;
+  }
+
+  @keyframes token-drop {
+    0% { transform: translateY(-100%) scaleY(0.5); opacity: 0; }
+    50% { opacity: 0.5; }
+    100% { transform: translateY(100vh) scaleY(2); opacity: 0; }
+  }
+
+  @keyframes neural-pulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.1); opacity: 1; }
+  }
+
+  .animate-neural-pulse {
+    animation: neural-pulse 4s ease-in-out infinite;
+  }
+
+  .-top-colossal { top: -10%; }
+  .-left-colossal { left: -10%; }
+  .-bottom-colossal { bottom: -10%; }
+  .-right-colossal { right: -10%; }
+}
+
+.infrastructure-overlay {
+  position: fixed;
+  inset: 0;
+  background: 
+    radial-gradient(circle at 20% 30%, oklch(from var(--primary) l c h / 0.03) 0%, transparent 40%),
+    radial-gradient(circle at 80% 70%, oklch(0.6 0.2 300 / 0.03) 0%, transparent 40%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+@keyframes neural-flow {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 100% 100%; }
+}
+
+.animate-neural {
+  animation: neural-flow 20s linear infinite;
+}
+
+.custom-scrollbar::-webkit-scrollbar { width: 4px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }

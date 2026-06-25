@@ -1,0 +1,37 @@
+{
+  "entities": {
+    "Optimization": {
+      "title": "Optimization Run",
+      "description": "A single prompt optimization event by a user.",
+      "type": "object",
+      "properties": {
+        "inputTokens": {
+          "type": "number",
+          "description": "Number of tokens in the original prompt."
+        },
+        "outputTokens": {
+          "type": "number",
+          "description": "Number of tokens in the optimized prompt."
+        },
+        "savedTokens": {
+          "type": "number",
+          "description": "Number of tokens saved."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp of the optimization."
+        }
+      },
+      "required": ["inputTokens", "outputTokens", "savedTokens"]
+    }
+  },
+  "firestore": {
+    "users/{userId}/optimizations": {
+      "schema": {
+        "$ref": "#/entities/Optimization"
+      },
+      "description": "Stores all prompt optimization events for a user."
+    }
+  }
+}
